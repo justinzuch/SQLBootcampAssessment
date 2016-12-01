@@ -52,12 +52,39 @@ FROM cd.members;
 
 --(10) Produce a count of the number of facilities that have a cost to guests of 10 or more.
 
+SELECT count(*)
+FROM cd.facilities
+WHERE guestcost >= 10;
+
 --(11) Skip this one, no question for #11.
 
 --(12) Produce a list of the total number of slots booked per facility in the month of September 2012. Produce an output table consisting of facility id and slots, sorted by the number of slots.
 
+--A little trickier, needs to be revisited
+SELECT facid, sum(slots) as "Total Slots"
+FROM cd.bookings
+WHERE starttime >= '2012-09-01' AND starttime <= '21012-10-01'
+GROUP BY facid
+ORDER BY sum(slots);
+
 --(13) Produce a list of facilities with more than 1000 slots booked. Produce an output table consisting of facility id and total slots, sorted by facility id.
+
+SELECT facid, sum(slots) as "Total Slots"
+FROM cd.bookings
+GROUP BY facid HAVING sum(slots) > 1000
+ORDER BY bks.starttime;
 
 --(14) How can you produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? Return a list of start time and facility name pairings, ordered by the time.
 
+--This one needs to be revisited.
+SELECT bks.starttime AS start, facs.name AS name
+FROM cd.facilities facs
+INNER JOIN cd.bookings bks on facs.facid
+WHERE facs.facid in (0, 1) AND bks.starttime >= '2012-09-21- AND bks.starttime <= '2012-09-22'
+ORDER BY bks.starttime;
+
 --(15) How can you produce a list of the start times for bookings by members named 'David Farrell'?
+
+SELECT bks.starttime
+FROM cd.bookings bks INNER JOIN cd.members mems on mems.memid = bks.memid
+WHERE mems.firstname = 'David' AND mems.surname = 'Farrell';
